@@ -1,0 +1,31 @@
+td {
+    text-align: center;
+}
+
+body {
+    margin: 0 auto;
+}
+
+.fa-motorcycle {
+    transform: rotate(-30deg);
+    font-size: 75px;
+}
+
+hr {
+    height: 2px;
+    border-width: 0;
+    color: blue;
+    background-color: blue;
+}
+
+#topo {
+    background-image: linear-gradient(gray, white);
+}
+
+#formulario .form-control {
+    height: calc(1.5em + .75rem + 2px);
+}
+
+#totalRepasse {
+    max-width: 100%;
+}

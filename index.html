@@ -2,327 +2,193 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Comandas</title>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Comandas</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 
-  <script>
-
-    class Endereco {
-      constructor(rua, bairro, cidades, taxa) {
-        this.rua = rua;
-        this.bairro = bairro;
-        this.cidades = cidades;
-        this.taxa = taxa;
-      }
-
-      validarCampos() {
-        for (let i in this) {
-          if (this[i] == undefined || this[i] == "" || this[i] == null) {
-            return false;
-          }
-        }
-
-        return true;
-      }
-    }
-
-
-    class BancoDeDados {
-
-      // Criar um id inicial
-      constructor() {
-        let id = localStorage.getItem('id');
-
-        if (id === null) {
-          localStorage.setItem('id', 0);
-        }
-      }
-
-      getProximoId() {
-        let proximoId = localStorage.getItem('id');
-        return parseInt(proximoId) + 1
-      }
-
-      gravar(endereco) {
-        let id = this.getProximoId();
-
-        localStorage.setItem(id, JSON.stringify(endereco));
-
-        localStorage.setItem('id', id)
-      }
-
-      recuperarRegistros() {
-
-        let registroArray = Array()
-
-        let id = localStorage.getItem('id')
-
-        for (let i = 1; i <= id; i++) {
-          let registro = JSON.parse(localStorage.getItem(i))
-
-          //pular indice fora da sequencia
-          if (registro === null) {
-            continue
-          }
-
-          registro.id = i
-          registroArray.push(registro)
-        }
-
-        return registroArray
-      }
-
-      remover(id) {
-        localStorage.removeItem(id)
-      }
-    }
-
-    let bancoDeDados = new BancoDeDados();
-
-    // Recupera os dados do formulario
-    function cadastrarCorrida() {
-      let rua = document.getElementById('rua').value;
-      let bairro = document.getElementById('bairro').value;
-      let cidades = document.getElementById('cidades').value;
-      let taxa = document.getElementById('taxa').value;
-
-      let endereco = new Endereco(rua, bairro, cidades, taxa);
-
-      // Verifica se todos os campos foram preenchidos
-      if (endereco.validarCampos()) {
-        // Salva na memoria do navegador os dados do formulario
-        bancoDeDados.gravar(endereco)
-        window.location.reload()
-
-      } else {
-        document.getElementById('modal_titulo').innerHTML = 'Atenção!';
-        document.getElementById('modal_css').className = 'modal-header text-danger';
-        document.getElementById('modal_texto').innerHTML = 'Há campos vazios!';
-        document.getElementById('modal_botao').innerHTML = 'Voltar';
-        document.getElementById('modal_botao').className = 'btn btn-danger';
-
-        //Mudar para JS puro
-        $('#erroGravacao').modal('show')
-
-        rua.value = ''
-        bairro.value = ''
-        cidades.value = ''
-        taxa.value = ''
-
-
-      }
-
-
-    }
-
-    function carregaComandas() {
-
-      var totalRepasse = 0
-
-      registroArray = bancoDeDados.recuperarRegistros()
-
-      var listaComandas = document.getElementById('listaTabela')
-
-      registroArray.forEach(registro => {
-
-        //(tr)
-        let linha = listaComandas.insertRow()
-
-        //(td)
-        linha.insertCell(0).innerHTML = registro.rua
-        linha.insertCell(1).innerHTML = registro.bairro
-
-        switch (registro.cidades) {
-          case '1': registro.cidades = "São Vicente"
-            break
-          case '2': registro.cidades = "Santos"
-            break
-          case '3': registro.cidades = "Praia Grande"
-            break
-        }
-
-        linha.insertCell(2).innerHTML = registro.cidades
-        linha.insertCell(3).innerHTML = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(registro.taxa)
-
-
-        if ((registro.taxa) > 10) {
-          repasse = (registro.taxa) - 3;
-        } else if ((registro.taxa) == 0) {
-          repasse = 2;
-        } else {
-          repasse = (registro.taxa) - 2;
-        }
-
-        linha.insertCell(4).innerHTML = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(repasse)
-
-        totalRepasse += repasse
-
-        let botaoExcluir = document.createElement('button')
-        botaoExcluir.className = 'btn bg-muted btn mb-0'
-        botaoExcluir.innerHTML = '<i class="fa-sharp fa-solid fa-delete-left text-danger"></i>'
-        botaoExcluir.id = registro.id
-
-        let botaoEditar = document.createElement('button')
-        botaoEditar.className = 'btn bg-muted btn mb-0'
-        botaoEditar.innerHTML = '<i class="fa-sharp fa-solid fa-pen-to-square text-warning"></i>'
-
-        botaoExcluir.onclick = () => {
-          bancoDeDados.remover(botaoExcluir.id)
-          window.location.reload()
-        }
-
-        linha.insertCell(5).append(botaoExcluir)
-        //linha.insertCell(6).append(botaoEditar)
-
-      })
-
-      document.getElementById('totalRepasse').innerHTML = `Repasse total: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalRepasse)}`
-
-      document.getElementById('totalEntregas').innerHTML = `${registroArray.length} entregas`
-
-    }
-
-  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </head>
-<style>
-  th,
-  td {
-    text-align: center;
-  }
-
-  body {
-    margin: 0 auto;
-  }
-
-  .fa-motorcycle {
-    transform: rotate(-30deg);
-    font-size: 75px;
-  }
-
-  hr {
-    height: 2px;
-    border-width: 0;
-    color: blue;
-    background-color: blue;
-  }
-</style>
+<link rel="stylesheet" href="style.css">
 
 <body onload="carregaComandas()">
 
-  <!-- Topo -->
-  <div id="topo" class="container">
-    <form id="main" class="row">
+    <!-- Topo -->
+    <div id="topo" class="container-fluid">
+        <form id="main" class="row">
 
-      <!-- Div do formulario -->
-      <div id="formulario" class="form-group m-3 col">
-        <input class="form-control form-control-sm w-75 m-2" type="text" id="rua" placeholder="RUA">
-        <input class="form-control form-control-sm w-75 m-2" type="text" id="bairro" placeholder="BAIRRO">
-        <select value="" class="form-control w-75 m-2" id="cidades">
-          <option value=''>Selecione</option>
-          <option value='1'>São Vicente</option>
-          <option value='2'>Santos</option>
-          <option value='3'>Praia Grande</option>
-        </select>
-        <input class="form-control form-control-sm w-75 m-2" type="number" id="taxa" placeholder="TAXA">
-        <input type="radio" id="repasse" value="repasse" name="tipo">
-        <label for="repasse">Repasse</label>
-        <input type="radio" id="integral" value="integral" name="tipo">
-        <label for="integral">Integral</label>
-        <br>
-        <button class="btn btn-primary" onclick="cadastrarCorrida(); return false;"><i
-            class="fa-solid fa-plus"></i></button>
-      </div>
+            <!-- Div do formulario -->
+            <div id="formulario" class="form-group m-3 col">
+                <input class="form-control form-control-sm w-75" type="text" id="rua" placeholder="RUA">
+                <input class="form-control form-control-sm w-75 mt-2" type="text" id="bairro" placeholder="BAIRRO">
+                <select value="" class="form-control w-75 mt-2" id="cidades">
+                    <option value=''>CIDADE</option>
+                    <option value='1'>São Vicente</option>
+                    <option value='2'>Santos</option>
+                    <option value='3'>Praia Grande</option>
+                </select>
+                <input class="form-control form-control-sm w-75 mt-2" type="number" id="taxa" placeholder="TAXA">
 
-      <!-- Ícone logo motoboy -->
-      <div class="m-2 mb-0 p-1 col d-flex flex-column justify-content-between">
-        <div>
-          <h2 id="totalRepasse"></h2>
-          <br>
-          <h2 id="totalEntregas"></h2>
-        </div>
-        <div class="mt-auto d-flex justify-content-end">
-          <button class="btn btn-success me-2"><i class="fa-solid fa-check"></i></button>
-          <button class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
-        </div>
-      </div>
-
-    </form>
-  </div>
-
-  <!-- Divisão do topo e da tabela -->
-  <hr>
-
-  <!-- Divisao tabela -->
-  <div id="tabela" class="table-responsive m-3 mt-5">
-
-    <table class="table table-striped table-hover">
-
-      <!-- Cabeçalho da tabela -->
-      <thead class="table-light">
-        <tr>
-          <th>RUA</th>
-          <th>BAIRRO</th>
-          <th>CIDADE</th>
-          <th>TAXA</th>
-          <th>REPASSE</th>
-          <th></th>
-        </tr>
-      </thead>
-
-      <!-- Conteudo da tabela -->
-      <tbody id="listaTabela">
-      </tbody>
-
-    </table>
-
-  </div>
-
-  <!-- Modal Erro -->
-  <div class="modal fade" id="erroGravacao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div id="modal_css">
-          <h5 class="modal-title" id="modal_titulo"></h5>
-        </div>
-        <div id="modal_texto" class="modal-body">
-        </div>
-        <div class="modal-footer">
-          <button id="modal_botao" type="button" data-dismiss="modal">Voltar</button>
-        </div>
-      </div>
+                <!-- Botao de adicionar e input ratio -->
+                <div class="d-flex justify-content-between align-items-center w-75 mt-2">
+                    <button class="btn btn-primary" id="cadastra" onclick="cadastrarCorrida(); return false;"><i
+                            class="fa-solid fa-plus"></i></button>
+                    <div class="ms-auto">
+                        <input type="radio" id="repasse" value="repasse" name="opcao" checked>
+                        <label for="repasse" class="ms-1">Repasse</label>
+                        <input type="radio" id="integral" value="integral" name="opcao" class="ms-3">
+                        <label for="integral" class="ms-1">Integral</label>
+                    </div>
+                </div>
+            </div>
     </div>
-  </div>
+    </form>
 
-  <!-- Bootstrap JS (optional) -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+    <div id="conteudoParaImprimir">
+        <!-- Ícone logo motoboy -->
+        <hr>
+        <div class="m-2 mb-0 p-1 col d-flex flex-column justify-content-between">
+            <div>
+                <h1 class="text-end" id="totalRepasse"></h1>
+                <h2 class="text-end text-secondary" id="totalEntregas"></h2>
+            </div>
+            <div id="botaoFinalizar" class="mt-2 d-flex justify-content-end">
+
+            </div>
+        </div>
+
+        <!-- Divisão do topo e da tabela -->
+        <hr>
+
+        <!-- Divisao tabela -->
+        <div id="tabela" class="table-responsive m-3 mt-5">
+
+            <table id="tabelaValor" class="table table-striped table-hover">
+
+                <!-- Cabeçalho da tabela -->
+                <thead class="table-light">
+                    <tr>
+                        <th>RUA</th>
+                        <th>BAIRRO</th>
+                        <th>CIDADE</th>
+                        <th>TAXA</th>
+                        <th>REPASSE</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <!-- Conteudo da tabela -->
+                <tbody id="listaTabela">
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+    <!-- Modal Erro -->
+    <div class="modal fade" id="erroGravacao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div id="modal_css">
+                    <h5 class="modal-title" id="modal_titulo"></h5>
+                </div>
+                <div id="modal_texto" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button id="modal_botao" type="button" data-dismiss="modal">Voltar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal atualizaçao -->
+    <div class="modal fade" id="atualizaGravacao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form>
+                        <div id="formulario" class="form-group m-3 col">
+                            <input class="form-control form-control-sm w-75 m-2" type="text" id="ruaAtualiza"
+                                placeholder="RUA">
+                            <input class="form-control form-control-sm w-75 m-2" type="text" id="bairroAtualiza"
+                                placeholder="BAIRRO">
+                            <select value="" class="form-control w-75 m-2" id="cidadesAtualiza">
+                                <option value='1'>São Vicente</option>
+                                <option value='2'>Santos</option>
+                                <option value='3'>Praia Grande</option>
+                            </select>
+                            <input class="form-control form-control-sm w-75 m-2" type="number" id="taxaAtualiza"
+                                placeholder="TAXA">
+                            <div class="m-2">
+                                <input type="radio" id="repasse" value="repasse" name="opcaoAtualiza" checked>
+                                <label for="repasse">Repasse</label>
+                                <input type="radio" id="integral" value="integral" name="opcaoAtualiza">
+                                <label for="integral">Integral</label>
+                                <span id="msg_erro"></span>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" id="atualiza" onclick="atualizaDados();">Atualizar</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal Excluir -->
+    <div class="modal fade" id="excluir" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div id="modal_cssErro">
+                    <h5 class="modal-title" id="modal_tituloErro"></h5>
+                </div>
+                <div id="modal_textoErro" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button id="modal_botaoSim" class="btn btn-danger" type="button">Sim</button>
+                    <button id="modal_botaoNao" class="btn btn-secondary" type="button"
+                        data-dismiss="modal">Voltar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="index.js"></script>
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 
 </body>
 
